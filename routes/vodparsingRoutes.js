@@ -5,6 +5,6 @@ const vodParsingController = require('../controllers/vodParsingController')
 
 router.route('/')
     .get(vodParsingController.get)
-    .post(vodParsingController.post);
+    .post(vodParsingController.post);   // POST not consumed by any Svc (shifted to stream stats svc)
 
 module.exports = router;

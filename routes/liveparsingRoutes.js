@@ -5,7 +5,7 @@ const liveParsingController = require('../controllers/liveParsingController')
 
 router.route('/')
     .get(liveParsingController.get)
-    .post(liveParsingController.post);
+    .post(liveParsingController.post);  // POST not consumed by any Svc (shifted to stream stats svc)
 
 
 module.exports = router;

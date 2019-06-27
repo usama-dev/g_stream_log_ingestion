@@ -21,7 +21,7 @@ const vodLogSchema = new Schema({
     },
     view_counts: Number,    // sent by parser
     view_date: Date,        // sent by parser
-    vod_details: {
+    vod_details: {          // These details are fetched from Video Svc and then saved here
         _id: String,
         title: String,
         program: String,

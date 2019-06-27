@@ -9,7 +9,7 @@ const liveLogSchema = new Schema({
         'default': shortid.generate
     },
     channel: String,
-    platform: String,
+    platform: String,   // Web OR Android
     category: String,   // Category of channel
     chunks: {
         144: { type: Number, default: 0 },
@@ -19,8 +19,8 @@ const liveLogSchema = new Schema({
         720: { type: Number, default: 0 },
         total: { type: Number, default: 0 }
     },
-    view_counts: Number,
-    view_date: Date,
+    view_counts: Number,    // Total number of clicks on channel
+    view_date: Date,        // One unique day for each channel
     insert_time: { type: Date, default: Date.now }
 
 

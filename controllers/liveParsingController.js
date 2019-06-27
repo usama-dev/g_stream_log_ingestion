@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const LiveLog = mongoose.model('LiveLog');
 mongoose.set('useFindAndModify', false);	// To turn off findAndModify of Mongoose and use mongo native findOneAndUpdate
 
-
+// Move these channels and their categories to config file (This can also be fetched from channels API every day and then saved to DB for updated values)
 let catsOfChannels = {
 	'ptvsportsweb': 'sports',
 	'expressnewsweb': 'news',
@@ -42,7 +42,10 @@ exports.post = async (req, res) => {
     let {view_date, platform, channel} = req.body;
 	let postBody = req.body;
 
+	// Setting Conditions
 	let conditions = { view_date, platform, channel };
+
+	// Setting update values
 	let update = { $inc: { 
 		"chunks.144": postBody.chunks[144],
 		"chunks.240": postBody.chunks[240],
@@ -53,25 +56,18 @@ exports.post = async (req, res) => {
 		"view_counts": postBody.view_counts},
 		"category": catsOfChannels[postBody.channel]
 	};
+
+	// Setting Query Options
 	let options = { new: true, upsert: true, setDefaultsOnInsert: true }
 
-	console.log(conditions);
-
-	// FULL Query
-	// let result = await LiveLog.findOneAndUpdate(
-	// 	{ date: '2018-10-26', platform: 'embed', channel:'new'}, 
-	// 	{ $inc: { "chunks.144":200, "chunks.240":200, "chunks.360":200, "chunks.480":200, "chunks.720":72, "chunks.total":200, "view_counts":500} }, 
-	// 	{ new: true, upsert:true, setDefaultsOnInsert:true })
-
-	// Mongo Shell Query:
-	// db.livelogs.update( { channel: "test1" }, {$inc: {"chunks.total":100, "chunks.720":200, "view_counts":500} }, {upsert:true} )
-	
+	// Final Query
 	let result = await LiveLog.findOneAndUpdate(conditions, update, options)
 
 	console.log(`Log Added: ${result._id}`);
     res.send("Posted!");
 }
 
+// POST not consumed by any Svc (shifted to stream stats svc)
 exports.get = async (req, res) => {
 
 	const { channel, platform, startDate, endDate } = req.query;
@@ -85,13 +81,7 @@ exports.get = async (req, res) => {
 	
 	console.log(query);
 
-	let result = await LiveLog.find(
-		// {date: {$gte: '2018-10-26', $lte: '2018-10-27'}, platform: 'web', channel: 'new'}
-		// {date: {$gte: '2018-10-26', $lte: '2018-10-27'} }
-		query
-	);
-
-	// Operation start:
+	let result = await LiveLog.find(query);
 
 	res.send(result);
 }
